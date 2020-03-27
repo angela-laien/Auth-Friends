@@ -1,6 +1,7 @@
 import React from 'react';
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 import FriendForm from './FriendForm';
+import DeleteFriend  from './DeleteFriend';
 
 class FriendsList extends React.Component {
 
@@ -10,6 +11,12 @@ class FriendsList extends React.Component {
 
     componentDidMount() {
         this.getData();
+    }
+
+    componentDidUpdate(preProps, preState) {
+        if (preState.friends !== this.state.friends) {
+            this.getData();
+        }
     }
     
     getData = () => {
@@ -32,16 +39,23 @@ class FriendsList extends React.Component {
 
                 <FriendForm />
 
-                {this.state.friends.map(friend => {
-                    return (
-                    <div key ={friend.id}>
-                        <p>ID: {friend.id}</p>
-                        <p>Name: {friend.name}</p>
-                        <p>Age: {friend.age}</p>
-                        <p>Email: {friend.email}</p>
+                <DeleteFriend />
+
+                {this.state.friends.length > 0 ? 
+                    <div>
+                        {this.state.friends.map(friend => {
+                            return (
+                            <div key ={friend.id}>
+                                <p>ID: {friend.id}</p>
+                                <p>Name: {friend.name}</p>
+                                <p>Age: {friend.age}</p>
+                                <p>Email: {friend.email}</p>
+                            </div>
+                            )
+                        })}
                     </div>
-                    )
-                })}
+                :
+                <div>loading friends list...</div>}
             </div>
         )
     }
